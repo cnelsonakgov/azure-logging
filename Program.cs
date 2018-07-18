@@ -14,17 +14,11 @@ namespace AzureLogging
         public static int Main(string[] args)
         {
             Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
+                .MinimumLevel.Verbose()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
                 .Enrich.FromLogContext()
+                .WriteTo.Trace()
                 .WriteTo.Console()
-                // Azure
-                .WriteTo.File(
-	    	        @"D:\home\LogFiles\Application\test-logs.txt",
-		            fileSizeLimitBytes: 1_000_000,
-		            rollOnFileSizeLimit: true,
-		            shared: true,
-		            flushToDiskInterval: TimeSpan.FromSeconds(1))
                 .CreateLogger();
 
             try

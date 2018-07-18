@@ -11,7 +11,7 @@ namespace AzureLogging
 
         public string Index()
         {
-            Log.Information("Called directly from Serilog: Default Action.");
+            Log.Fatal("Called directly from Serilog: Default Action.");
             return "Hello world ";
         }
 
@@ -20,13 +20,13 @@ namespace AzureLogging
 
         public string Welcome(string name)
         {
-            Log.Information("Called directly from Serilog: Welcome Method.");
+            Log.Debug("Called directly from Serilog: Welcome Method.");
             return HtmlEncoder.Default.Encode($"This is the Welcome action method. Welcome {name}!");
         }
 
         public string Error()
         {
-            Log.Warning("An error has occurred");
+            Log.Verbose("An error has occurred");
             return "This is my error method.";
         }
     }
