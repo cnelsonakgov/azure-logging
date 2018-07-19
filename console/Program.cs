@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Serilog;
 
 namespace console
@@ -18,6 +19,13 @@ namespace console
             {
                 Log.Information("Application starting ...");
                 Console.WriteLine("Hello World!");
+                Log.Information("Switching to System.Diagnostics.Trace");
+                
+                //Call Trace explicitly
+                Trace.WriteLine("TRACE CUSTOM LINE");
+                Trace.TraceInformation("TRACE CUSTOM INFO");
+                Trace.TraceWarning("TRACE CUSTOM WARN");
+                Trace.TraceError("TRACE CUSTOM ERROR");
             }
             catch (Exception ex)
             {
