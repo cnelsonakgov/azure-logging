@@ -1,14 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Serilog;
 using System.Diagnostics;
 using System.Text.Encodings.Web;
-
 
 namespace AzureLogging
 {
     public class LoggerController : Controller
     {
-        private readonly ILogger _logger;
+        private readonly Microsoft.Extensions.Logging.ILogger _logger;
 
         public LoggerController(ILogger<LoggerController> logger)
         {
@@ -19,6 +19,7 @@ namespace AzureLogging
         {
             _logger.LogInformation("LoggerController: Using ILogger LoggerController");
             System.Diagnostics.Trace.TraceError("LoggerController: Using System.Diagnostics.Trace");
+            Log.Logger.Information("Serilog: Using Serilog Log");
             return("Basic controller with log interface.");
         }
     }

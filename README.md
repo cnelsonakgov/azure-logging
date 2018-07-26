@@ -22,10 +22,17 @@ A sample project can be found in the [Serilog source on GitHub](https://github.c
 
 ## Azure Diagnostics and Logging with DotNetCore
 
-[AzureAppService Provider for AspNetCore](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetcore-2.1#azure-app-service-provider) writes logs to file and blob storage. 
+Logging in .Net Core has been updated and now uses a [logging API](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetcore-2.1).
 
-Diagnostics should be enabled in the portal and then available when using `System.Diagnostics.Trace`.
+[AzureAppService Provider for AspNetCore](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetcore-2.1#azure-app-service-provider) writes logs to Azure's Diagnostic Application Logs -- file system with log streaming and blob storage. 
+
+Diagnostics should be enabled in the portal. Note that previous documentation using `System.Diagnostics.Trace` does not appear to generate Azure Diagnostic Application logs with the latest release.
 
 ## Console Trace
 
 To view the `console` trace use the `DebugView` application which is available [here](https://docs.microsoft.com/en-us/sysinternals/downloads/debugview) from Microsoft SysInternals site.
+
+## Microsoft Extensions Azure Logger
+
+Required to get the logger working with Azure `Diagnostic Logs`
+https://www.nuget.org/packages/Microsoft.Extensions.Logging.AzureAppServices/
