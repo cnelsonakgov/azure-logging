@@ -9,6 +9,7 @@ using Serilog.Core;
 using Serilog.Events;
 using Serilog.Configuration;
 using Serilog.Formatting;
+using Serilog.Formatting.Display;
 
 namespace AzureLogging
 {
@@ -20,7 +21,7 @@ namespace AzureLogging
                 .MinimumLevel.Verbose()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
                 .Enrich.FromLogContext()
-                .WriteTo.AzureAppSink()
+                .WriteTo.AzureApp()
                 .CreateLogger();
 
             try
@@ -28,11 +29,6 @@ namespace AzureLogging
                 Log.Information("Getting the motors running...");
 
                 CreateWebHostBuilder(args)
-                    .ConfigureLogging((hostingContext, logging) =>
-                    {
-                        logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
-                        logging.AddConsole();
-                    })
                     .Build()
                     .Run();
 
@@ -99,11 +95,29 @@ namespace AzureLogging
 
     public static class AzureAppSinkExtensions
     {
-       public static LoggerConfiguration AzureAppSink(
-                this LoggerSinkConfiguration loggerConfiguration,
-                ITextFormatter textFormatter = null)
+        const string DefaultOutputTemplate = "{Message}{NewLine}{Exception}";
+        public static LoggerConfiguration AzureApp(
+                this LoggerSinkConfiguration sinkConfiguration,
+                LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum,
+                string outputTemplate = DefaultOutputTemplate,
+                IFormatProvider formatProvider = null,
+                LoggingLevelSwitch levelSwitch = null)
         {
-        return loggerConfiguration.Sink(new AzureAppSink(textFormatter));
+            if (sinkConfiguration == null) throw new ArgumentNullException(nameof(sinkConfiguration));
+            if (outputTemplate == null) throw new ArgumentNullException(nameof(outputTemplate));
+            var formatter = new MessageTemplateTextFormatter(outputTemplate, formatProvider);
+            return AzureApp(sinkConfiguration, formatter, restrictedToMinimumLevel, levelSwitch);
+        }
+
+        public static LoggerConfiguration AzureApp(
+            this LoggerSinkConfiguration sinkConfiguration,
+            ITextFormatter formatter,
+            LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum,
+            LoggingLevelSwitch levelSwitch = null)
+        {
+            if (sinkConfiguration == null) throw new ArgumentNullException(nameof(sinkConfiguration));
+            if (formatter == null) throw new ArgumentNullException(nameof(formatter));
+            return sinkConfiguration.Sink(new AzureAppSink(formatter), restrictedToMinimumLevel, levelSwitch);
         }
     }
 }
